@@ -1,44 +1,38 @@
-import { useEffect, useRef } from "react";
-import { io } from "socket.io-client";
+import React, { useState, useEffect, useRef } from "react";
 
-import logo from "./logo.svg";
+import { initSocketEvents } from "./api/socket.io";
+import { getVideos, addVideo } from "./api/crudRequests";
+
+import Form from "./components/Form/Form";
+import PlayListItem from "./components/PlayList/PlayList";
+
 import "./App.css";
-
-const socket = io("http://localhost:8000");
 
 function App() {
   const isEffectRan = useRef(false);
 
+  const [playList, setPlayList] = useState([]);
+
   useEffect(() => {
     if (!isEffectRan.current) {
-      socket.on("connect", () => console.log("connect", socket.id));
-      socket.on("new-video", (data) => {
-        console.log("created", data);
+      getVideos().then((data) => setPlayList(data));
+      initSocketEvents({
+        onNewVideo: (data) => setPlayList((prev) => [...prev, data]),
       });
-      socket.on("disconnect", () => console.log("server disconnected"));
     }
-
     return () => {
       isEffectRan.current = true;
     };
   }, []);
 
+  const onAdd = (value) => {
+    addVideo({ url: value });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Form onAdd={onAdd} />
+      <PlayListItem playList={playList} />
     </div>
   );
 }
