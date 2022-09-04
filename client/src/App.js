@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import { initSocketEvents } from "./api/socket.io";
-import { getVideos, addVideo } from "./api/crudRequests";
+import { getVideos, addVideo, deleteVideo } from "./api/crudRequests";
 import { getVideoDetails } from "./api/youtube";
 
 import Form from "./components/Form/Form";
 import PlayListItem from "./components/PlayList/PlayList";
 import YouTubePlayer from "./components/YouTubePlayer/YouTubePlayer";
 
-import "./App.css";
+import { MainLayout, PlayListContainer } from "./App.styles";
 
 function App() {
   const isEffectRan = useRef(false);
@@ -50,20 +50,23 @@ function App() {
     } catch (error) {}
   };
 
-  const onEndVideoHandler = (id) => {
+  const onRemoveVideoHandler = (id) => {
+    deleteVideo(id);
     setPlayList((prev) => prev.filter((video) => id !== video.id));
   };
 
   return (
-    <div className="App">
-      <Form onAdd={onAdd} />
-      <PlayListItem playList={playList} />
+    <MainLayout>
+      <PlayListContainer>
+        <Form onAdd={onAdd} />
+        <PlayListItem playList={playList} onRemove={onRemoveVideoHandler} />
+      </PlayListContainer>
       <YouTubePlayer
         id={currentVideo && currentVideo.id}
         videoId={currentVideo ? currentVideo.embedCode : ""}
-        onEnd={onEndVideoHandler}
+        onEnd={onRemoveVideoHandler}
       />
-    </div>
+    </MainLayout>
   );
 }
 

@@ -1,11 +1,20 @@
 import React from "react";
-import { ItemContainer, Title, Length } from "./PlayListItem.styles";
+import {
+  ItemContainer,
+  DetailsContainer,
+  Title,
+  Length,
+  RemoveButton,
+} from "./PlayListItem.styles";
 
-const PlayListItem = ({ id, title, length }) => {
+const PlayListItem = ({ id, title, length, onRemove }) => {
   return (
     <ItemContainer>
-      <Title>{title}</Title>
-      {length && <Length>{length}</Length>}
+      <DetailsContainer>
+        <Title>{title}</Title>
+        {length && <Length>{length}</Length>}
+      </DetailsContainer>
+      <RemoveButton onClick={() => onRemove(id)} />
     </ItemContainer>
   );
 };
