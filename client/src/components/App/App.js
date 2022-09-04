@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import { initSocketEvents } from "./api/socket.io";
-import { getVideos, addVideo, deleteVideo } from "./api/crudRequests";
-import { getVideoDetails } from "./api/youtube";
+import { initSocketEvents } from "../../api/socket.io";
+import { getVideos, deleteVideo } from "../../api/crudRequests";
+import { onAdd } from "../../utils/logic";
 
-import Form from "./components/Form/Form";
-import PlayListItem from "./components/PlayList/PlayList";
-import YouTubePlayer from "./components/YouTubePlayer/YouTubePlayer";
+import Form from "../Form/Form";
+import PlayListItem from "../PlayList/PlayList";
+import YouTubePlayer from "../YouTubePlayer/YouTubePlayer";
 
 import { MainLayout, PlayListContainer } from "./App.styles";
 
@@ -35,20 +35,6 @@ function App() {
       setCurrentVideo(playList[0]);
     }
   }, [playList]);
-
-  const onAdd = (value) => {
-    try {
-      const url = new URL(value);
-      const embedCode = url.searchParams.get("v");
-      if (embedCode) {
-        getVideoDetails(embedCode).then(({ title, length }) =>
-          addVideo({ url: value, embedCode, title, length }).catch((error) =>
-            console.error(error)
-          )
-        );
-      }
-    } catch (error) {}
-  };
 
   const onRemoveVideoHandler = (id) => {
     deleteVideo(id);

@@ -1,5 +1,5 @@
 export const getVideos = () => {
-  return fetch("http://localhost:8000/api/videos")
+  return fetch("/api/videos")
     .then((response) => response.json())
     .then((response) => {
       if (response.success) {
@@ -14,7 +14,7 @@ export const getVideos = () => {
 };
 
 export const addVideo = (data) => {
-  return fetch("http://localhost:8000/api/video", {
+  return fetch("/api/video", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -33,7 +33,7 @@ export const addVideo = (data) => {
 };
 
 export const deleteVideo = (id) => {
-  return fetch(`http://localhost:8000/api/video/${id}`, {
+  return fetch(`/api/video/${id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
   })

@@ -1,21 +1,13 @@
 import React from "react";
 import YouTube from "react-youtube";
+import { PLAYER_OPTIONS } from "../../utils/consts";
 
 const YouTubePlayer = ({ id, videoId, onEnd }) => {
-  const opts = {
-    height: "390",
-    width: "640",
-    playerVars: {
-      autoplay: 1,
-      controls: 0,
-      disablekb: 1,
-    },
-  };
   return (
     <YouTube
       key={id}
       id={id}
-      opts={opts}
+      opts={PLAYER_OPTIONS}
       videoId={videoId}
       onEnd={() => onEnd(id)}
     />
