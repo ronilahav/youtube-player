@@ -85,7 +85,9 @@ deleteVideo = async (req, res) => {
     }
 
     return res.status(200).json({ success: true, data: video });
-  }).catch((err) => console.log(err));
+  })
+    .clone()
+    .catch((err) => console.log(err));
 };
 
 getVideoById = async (req, res) => {
