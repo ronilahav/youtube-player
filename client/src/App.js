@@ -6,6 +6,7 @@ import { getVideoDetails } from "./api/youtube";
 
 import Form from "./components/Form/Form";
 import PlayListItem from "./components/PlayList/PlayList";
+import YouTubePlayer from "./components/YouTubePlayer/YouTubePlayer";
 
 import "./App.css";
 
@@ -13,6 +14,7 @@ function App() {
   const isEffectRan = useRef(false);
 
   const [playList, setPlayList] = useState([]);
+  const [currentVideo, setCurrentVideo] = useState(null);
 
   useEffect(() => {
     if (!isEffectRan.current) {
@@ -26,18 +28,41 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!playList.length) {
+      setCurrentVideo(null);
+    } else if (!currentVideo || playList[0].id !== currentVideo.id) {
+      setCurrentVideo(playList[0]);
+    }
+  }, [playList]);
+
   const onAdd = (value) => {
-    const url = new URL(value);
-    const embedCode = url.searchParams.get("v");
-    getVideoDetails(embedCode).then(({ title, length }) =>
-      addVideo({ url: embedCode, title, length })
-    );
+    try {
+      const url = new URL(value);
+      const embedCode = url.searchParams.get("v");
+      if (embedCode) {
+        getVideoDetails(embedCode).then(({ title, length }) =>
+          addVideo({ url: value, embedCode, title, length }).catch((error) =>
+            console.error(error)
+          )
+        );
+      }
+    } catch (error) {}
+  };
+
+  const onEndVideoHandler = (id) => {
+    setPlayList((prev) => prev.filter((video) => id !== video.id));
   };
 
   return (
     <div className="App">
       <Form onAdd={onAdd} />
       <PlayListItem playList={playList} />
+      <YouTubePlayer
+        id={currentVideo && currentVideo.id}
+        videoId={currentVideo ? currentVideo.embedCode : ""}
+        onEnd={onEndVideoHandler}
+      />
     </div>
   );
 }

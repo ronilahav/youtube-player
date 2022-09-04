@@ -8,9 +8,14 @@ const Form = ({ onAdd }) => {
     onAdd(value);
     setValue("");
   };
+
   return (
     <FromContainer>
-      <Input value={value} onChange={(e) => setValue(e.target.value)} />
+      <Input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyPress={(e) => e.key === "Enter" && onAddHandler()}
+      />
       <AddButton onClick={onAddHandler}>ADD</AddButton>
     </FromContainer>
   );

@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const Video = new Schema(
   {
     url: { type: String, required: true },
+    embedCode: { type: String, required: false },
     title: { type: String, required: false },
     length: { type: String, required: false },
   },
